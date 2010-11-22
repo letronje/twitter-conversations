@@ -12,7 +12,7 @@ object Util{
 	/*private def getDefaultTwitter: Twitter = {
 		val twitter = new TwitterFactory().getInstance();
 		twitter.setOAuthConsumer(Constants.consumerKey,Constants.consumerSecret);
-		twitter.setOAuthAccessToken(new AccessToken(Constants.getDefaultToken, Constants.getDefaultTokenSecret))
+
 		twitter
 	}*/
 
@@ -23,18 +23,25 @@ object Util{
 		else{
 			twitter = new TwitterFactory().getInstance();
 			twitter.setOAuthConsumer(Constants.consumerKey, Constants.consumerSecret);
-			val requestToken = twitter.getOAuthRequestToken();
-			val br = new BufferedReader(new InputStreamReader(System.in));
-			val authUrl = requestToken.getAuthorizationURL();
-			println("Auth URL ~> " + authUrl);
-			println("Goto this url in your browser and give the app some love, thnx :)")
-			print("Enter pin: ")
-			val pin = br.readLine();
-			println(pin)
-			val accessToken = twitter.getOAuthAccessToken(requestToken, pin);
-			//println("Token = " + accessToken.getToken)
-			//println("Token Secret = " + accessToken.getTokenSecret)
-			twitter.setOAuthAccessToken(accessToken)
+
+			if(Constants.defaultTokensAvailable){
+				val (defaultToken, defaultTokenSecret) = Constants.getDefaultTokens()
+				twitter.setOAuthAccessToken(new AccessToken(defaultToken,defaultTokenSecret))	
+			}
+			else{
+				val requestToken = twitter.getOAuthRequestToken();
+				val br = new BufferedReader(new InputStreamReader(System.in));
+				val authUrl = requestToken.getAuthorizationURL();
+				println("Auth URL ~> " + authUrl);
+				println("Goto this url in your browser and give the app some love, thnx :)")
+				print("Enter pin: ")
+				val pin = br.readLine();
+				println(pin)
+				val accessToken = twitter.getOAuthAccessToken(requestToken, pin);
+				println("Token = " + accessToken.getToken)
+				println("Token Secret = " + accessToken.getTokenSecret)
+				twitter.setOAuthAccessToken(accessToken)
+			}
 			twitter
 		}
 	}

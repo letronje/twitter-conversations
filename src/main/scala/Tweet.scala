@@ -1,7 +1,8 @@
 import java.util.Date
 import twitter4j.Status
 
-case class Tweet(id: Long,
+case class Tweet(
+		id: Long,
 		text: String,
 		userId: Long,
 		userName: String,

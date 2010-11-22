@@ -3,22 +3,24 @@ object App {
 		System.setProperty ("twitter4j.loggerFactory", "twitter4j.internal.logging.NullLoggerFactory"); 
 	}
 
+	def saveTokensFromArgs(args: Array[String]){
+		if(args.size >= 2){
+			Constants.setDefaultTokens(args(0), args(1))	
+		}
+	}
+
 	def main(args: Array[String]){
 		disableLogging
+		saveTokensFromArgs(args)
+		
 		val numStatuses = Constants.maxStatuses
 		println("Fetching " + numStatuses + " from your home timeline ...")
 		val statuses = Util.getStatuses(numStatuses)
 		println("Fetched " + statuses.size + " tweets")
-		StatusCache.put(statuses)
-		//StatusCache.show
-		val replies = Util.getReplies(statuses)
-		//replies.foreach(r => println(r.getId + " " + r.getText + " " + r.getInReplyToStatusId))
-		ConversationCache.put(replies)
-		//StatusCache.show
-		//ConversationCache.show()
 
-		//println(ConversationCache.get(4246305643700224L).children(0).calcWeight)
-		//ConversationCache.calcWeights
+		StatusCache.put(statuses)
+		val replies = Util.getReplies(statuses)
+		ConversationCache.put(replies)
 		ConversationCache.show()
 	}
 }
